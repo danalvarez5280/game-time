@@ -44,14 +44,16 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	
+
 	__webpack_require__(1);
 
-	var Doodad = __webpack_require__(5);
-	var Platform = __webpack_require__(6);
-	var Player = __webpack_require__(7);
+	var Game = __webpack_require__(5);
 
 	const canvas = document.getElementById('frogger');
 	const context = canvas.getContext('2d');
+
+	var frogger;
 
 	// var truck1 = new Truck( 0, 0, 40, 15, right)
 	//
@@ -61,63 +63,49 @@
 	//
 
 
-	function gameStart() {
+	function initialize() {
+	  frogger = new Game(canvas, context);
 
-	  var background = [];
-	  var startZone = new Platform(0, 750, canvas.width, 50, 'pink', true);
-	  background.push(startZone);
+	  frogger.addPlatforms();
+	  frogger.addPlayers();
 
-	  var road = new Platform(0, 550, canvas.width, 200, 'black', true);
-	  background.push(road);
-	  // road.draw(context)
-
-	  var median = new Platform(0, 500, canvas.width, 50, 'green', true);
-	  background.push(median);
-	  // median.draw(context)
-
-	  var water = new Platform(0, 300, canvas.width, 200, 'blue', true);
-	  background.push(water);
-	  // water.draw(context)
-
-	  var endZone = new Platform(0, 250, canvas.width, 50, 'green', true);
-	  background.push(endZone);
-	  // endZone.draw(context)
-
-	  var frog = new Player(225, 750, 50, 50, 'yellow', 3);
-
-	  context.clearRect(0, 0, canvas.width, canvas.height);
-	  for (var i = 0; i <= background.length; i++) {
-	    background[i].draw(context);
-	  }
-	  // frog.draw(context)
-
-	  window.addEventListener('keydown', function (event) {
-	    console.log(event.keyCode);
-	    switch (event.keyCode) {
-	      case 39:
-	        frog.x += 50;
-	        break;
-	      case 37:
-	        frog.x -= 50;
-	        break;
-	      case 38:
-	        frog.y -= 50;
-	        break;
-	      case 40:
-	        frog.y += 50;
-	        break;
-	    }
-
-	    // frog.draw(context)
-	  });
+	  // game.clearCanvas();
+	  //
+	  // game.drawPlatforms();
+	  // game.drawPlayer();
+	  //console.log(frog.name);
+	  gameLoop();
 	}
 
 	function gameLoop() {
-	  gameStart();
-	  // frog.draw(context)
+	  console.log('loop');
+	  frogger.clearCanvas();
+	  frogger.drawPlatforms();
+	  frogger.drawPlayer();
+	  //requestAnimationFrame(gameLoop);
 	}
 
-	gameLoop();
+	window.addEventListener('keydown', function (event) {
+	  console.log(event.keyCode);
+	  switch (event.keyCode) {
+	    case 39:
+	      frogger.player.x += 50;
+	      break;
+	    case 37:
+	      frogger.player.x -= 50;
+	      break;
+	    case 38:
+	      frogger.player.y -= 50;
+	      break;
+	    case 40:
+	      frogger.player.y += 50;
+	      break;
+	  }
+	});
+
+	initialize();
+
+	//
 
 /***/ }),
 /* 1 */
@@ -469,6 +457,85 @@
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	
+	var Platform = __webpack_require__(6);
+	var Player = __webpack_require__(8);
+
+	class Game {
+	  constructor(canvas, context) {
+	    this.canvas = canvas;
+	    this.context = context;
+	    this.platforms = [];
+	    this.player = undefined;
+	  }
+
+	  clearCanvas() {
+	    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	  }
+
+	  addPlatforms() {
+	    var startZone = new Platform(0, 750, this.canvas.width, 50, 'pink', true);
+	    this.platforms.push(startZone);
+
+	    var road = new Platform(0, 550, this.canvas.width, 200, 'black', true);
+	    this.platforms.push(road);
+	    // road.draw(context)
+
+	    var median = new Platform(0, 500, this.canvas.width, 50, 'green', true);
+	    this.platforms.push(median);
+	    // median.draw(context)
+
+	    var water = new Platform(0, 300, this.canvas.width, 200, 'blue', true);
+	    this.platforms.push(water);
+	    // water.draw(context)
+
+	    var endZone = new Platform(0, 250, this.canvas.width, 50, 'green', true);
+	    this.platforms.push(endZone);
+	    // endZone.draw(context)
+	  }
+
+	  addPlayers() {
+	    this.player = new Player(225, 750, 50, 50, 'yellow', 3);
+	  }
+
+	  drawPlatforms() {
+	    for (let i = 0; i < this.platforms.length; i++) {
+	      this.platforms[i].draw(this.context);
+	    }
+	  }
+
+	  drawPlayer() {
+	    this.player.draw(this.context);
+	  }
+
+	};
+
+	module.exports = Game;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Doodad = __webpack_require__(7);
+
+	class Platform extends Doodad {
+	  constructor(x, y, width, height, model, walkable) {
+	    super(x, y, width, height, model);
+	    this.walkable = walkable;
+	  }
+
+	  draw(context) {
+	    super.draw(context);
+	  }
+
+	};
+
+	module.exports = Platform;
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 	class Doodad {
@@ -490,30 +557,10 @@
 	module.exports = Doodad;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Doodad = __webpack_require__(5);
-
-	class Platform extends Doodad {
-	  constructor(x, y, width, height, model, walkable) {
-	    super(x, y, width, height, model);
-	    this.walkable = walkable;
-	  }
-
-	  draw(context) {
-	    super.draw(context);
-	  }
-
-	};
-
-	module.exports = Platform;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Doodad = __webpack_require__(5);
+	var Doodad = __webpack_require__(7);
 
 	class Player extends Doodad {
 	  constructor(x, y, width, height, model, lives) {
