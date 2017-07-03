@@ -67,7 +67,18 @@
 	  livesLabel.innerText = `Lives: ${frogger.player.lives}`;
 	  levelLabel.innerText = `Level: ${frogger.currentLevel}`;
 
-	  gameLoop();
+	  frogger.context.fillStyle = 'white';
+	  frogger.context.fillRect(100, 100, 600, 450);
+
+	  frogger.context.fillStyle = 'black';
+	  frogger.context.font = "48px Acme";
+
+	  let message = `Welcome to Frogger`;
+	  frogger.context.fillText(message, 150, 150);
+
+	  message = `Press SpaceBar to Start`;
+	  frogger.context.fillText(message, 150, 250);
+	  //gameLoop();
 	}
 
 	function gameLoop() {
@@ -88,28 +99,49 @@
 	  //   frogger.checkCollisionWater();
 	  // }
 	  frogger.moveMovers();
-	  requestAnimationFrame(gameLoop);
+	  if (frogger.keepDrawing) {
+	    requestAnimationFrame(gameLoop);
+	  }
 	}
 
 	window.addEventListener('keydown', function (event) {
 	  // console.log(event.keyCode);
-	  switch (event.keyCode) {
-	    case 39:
-	      frogger.player.x += 50;
-	      break;
-	    case 37:
-	      frogger.player.x -= 50;
-	      break;
-	    case 38:
-	      frogger.player.y -= 50;
-	      frogger.player.currentLane++;
-	      break;
-	    case 40:
-	      frogger.player.y += 50;
-	      frogger.player.currentLane--;
-	      break;
+
+	  // Code 32 = Spacebar | If you dont check the keepDrawing, the game will exponentially get faster,
+	  // as i think game loops keep stacking
+	  if (event.keyCode === 32 && frogger.keepDrawing === false) {
+	    if (frogger.justLost === true) {
+	      frogger.justLost = false;
+	      initialize();
+	    } else {
+	      frogger.keepDrawing = true;
+	      gameLoop();
+	    }
+
+	    // this keepDrawing check prevents the user from moving the frog while a message is displayed
+	  } else if (frogger.keepDrawing === true) {
+	    switch (event.keyCode) {
+	      case 39:
+	        //right
+	        frogger.player.x += 50;
+	        break;
+	      case 37:
+	        //left
+	        frogger.player.x -= 50;
+	        break;
+	      case 38:
+	        //up
+	        frogger.player.y -= 50;
+	        frogger.player.currentLane++;
+	        break;
+	      case 40:
+	        //down
+	        frogger.player.y += 50;
+	        frogger.player.currentLane--;
+	        break;
+	    }
+	    frogger.player.animateOn = true;
 	  }
-	  frogger.player.animateOn = true;
 	});
 
 	initialize();
@@ -151,7 +183,7 @@
 
 
 	// module
-	exports.push([module.id, "#frogger {\n  border: 5px solid black;\n  display: block;\n  margin: auto;\n}\n", ""]);
+	exports.push([module.id, "@font-face {\n  font-family: 'Acme';\n  font-style: normal;\n  font-weight: 400;\n  src: local('Acme Regular'), local('Acme-Regular'), url(https://fonts.gstatic.com/s/acme/v6/FDMh4aixPTtSeEPULD_zPPesZW2xOQ-xsNqO47m55DA.woff2) format('woff2');\n  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;\n}\n\n\n#frogger {\n  border: 5px solid black;\n  display: block;\n  margin: auto;\n  font-family: 'Acme'\n  }\n\n  #loadfont {\n      font-family: 'Acme';\n      visibility: hidden;\n      height: 0px;\n  }\n", ""]);
 
 	// exports
 
@@ -483,6 +515,8 @@
 	    this.lanes = [];
 	    this.player = undefined;
 	    this.currentLevel = 1;
+	    this.keepDrawing = false;
+	    this.justLost = false;
 	  }
 
 	  clearCanvas() {
@@ -558,6 +592,23 @@
 	    }
 	  }
 
+	  changeLevel() {
+	    this.keepDrawing = false;
+	    let levelPassed = this.currentLevel;
+	    this.currentLevel++;
+
+	    this.context.fillStyle = 'white';
+	    this.context.fillRect(100, 100, 600, 450);
+
+	    this.context.fillStyle = 'black';
+	    this.context.font = "48px Acme";
+	    let message = `You passed level ${levelPassed}`;
+	    this.context.fillText(message, 150, 150);
+
+	    message = `Press SpaceBar to start level ${this.currentLevel}`;
+	    this.context.fillText(message, 150, 250);
+	  }
+
 	  winCheck() {
 	    var lastLaneIndex = this.lanes.length - 1;
 	    var lastLaneMovers = this.lanes[lastLaneIndex].moversInMyLane;
@@ -574,7 +625,8 @@
 	    }
 
 	    if (didIWin === true) {
-	      this.currentLevel++;
+	      this.changeLevel();
+
 	      for (let i = 0; i < this.lanes.length; i++) {
 	        this.lanes[i].speed = this.lanes[i].speed * 5.5;
 	        // console.log(this.lanes[i].speed);
@@ -632,36 +684,193 @@
 	    this.player = new Player(350, 600, 50, 50, 'yellow', 3, playerImage);
 	  }
 
+	  roundNumber(value, precision) {
+	    var multiplier = Math.pow(10, precision || 0);
+	    return Math.round(value * multiplier) / multiplier;
+	  }
+
+	  randomNumber(min, max, precision) {
+	    //min max are inclusive
+	    var newNum = Math.random() * (max - min) + min;
+	    newNum = this.roundNumber(newNum, precision);
+	    return newNum;
+	  }
+
+	  laneFactory(i, type) {
+
+	    var direction = i % 2 === 1 ? 1 : -1;
+	    var speed = 0; //DEBUG: this.randomNumber(1, 5, 1);
+	    var offset = type === 'road' ? 300 : 0;
+	    var y = offset + i * 50;
+	    var randomWidth;
+
+	    if (type === 'road') {
+	      // create random number 100, 150, or 200:
+	      // car1 - 100
+	      // car2 - 100
+	      // car3 - 100
+	      // truck1 - 150
+	      // truck2 - 200
+	      randomWidth = this.randomNumber(2, 4) * 50;
+	    }
+
+	    if (type === 'agua') {
+	      // create random number 150, 250, or 350:
+	      // log1 - 150
+	      // log2 - 250
+	      // log3 - 350
+	      randomWidth = this.randomNumber(0, 2) * 100 + 150;
+	    }
+
+	    var newLane = new Lane(direction, speed, y, randomWidth);
+
+	    // var log1a = new Mover((50 - 450), agua1.y, 100, 50, 'brown', true);
+	    // var log1b = new Mover((200 - 450), agua1.y, 100, 50, 'brown', true);
+	    // var log1c = new Mover((350 - 450), agua1.y, 100, 50, 'brown', true);
+
+	    // var truck1 = new Mover(100, road1.y, 100, 50, 'red', false);
+	    // newLane.pushOntoLane(truck1);
+	    // this.lanes.push(newLane);
+
+	    //return newLane;
+
+	    this.moverFactory(newLane);
+
+	    this.lanes.push(newLane);
+
+	    // direction
+	    // speed
+	    // y
+	  }
+
+	  moverFactory(lane) {
+	    // road movers
+	    // car1 - 100
+	    // car2 - 100
+	    // car3 - 100
+	    // truck1 - 150
+	    // truck2 - 200
+
+	    // agua movers
+	    // log1 - 150
+	    // log2 - 250
+	    // log3 - 350
+
+	    // max width 800
+
+	    // var x;
+	    var y = lane.y;
+	    var width = lane.width;
+	    var height = 50;
+	    var model = 'red';
+	    var walkable = false;
+
+	    let gap; //gap between movers
+	    let x = 0; //new x coord
+	    let prevX = 0; //the last x coord we set for that lane
+	    let prevWidthGap = 0;
+
+	    let newMover;
+
+	    switch (lane.width) {
+	      case 100:
+	        //car1, 2, 3
+	        model = 'green';
+	        break;
+	      case 150:
+	        //truck1
+	        model = 'orange';
+	        break;
+	      case 200:
+	        //truck2
+	        model = 'teal';
+	        break;
+	    }
+
+	    while (x < 800) {
+	      // widths are (100, 150, or 200) or (150, 250, or 350)
+
+	      x = prevX + prevWidthGap; // + (lane.direction === 1 ? -800 : 800);
+
+
+	      // use x here
+	      newMover = new Mover(x, y, width, height, model, walkable);
+
+	      lane.pushOntoLane(newMover);
+
+	      // create random number 50, 100, 150, or 200
+	      gap = this.randomNumber(1, 4) * 50;
+	      prevWidthGap = lane.width + gap;
+	      prevX = x;
+	      //create Mover object, and push onto lane
+	    }
+
+	    // var log1a = new Mover((0), agua1.y, 100, 50, '0', true);
+	    // var log1b = new Mover((150), agua1.y, 150, 150, '1', true);
+	    // var log1c = new Mover((450), agua1.y, 150, 50, '2', true);
+	    // var log1d = new Mover((650), agua1.y, 200, 100, '3', true);
+	    // var log1e = new Mover((950), agua1.y, 100, 200, '4', true);
+	    // var log1f = new Mover((1250), agua1.y, 100, 50, '5', true);
+
+
+	    // lane.pushOntoLane(truck1);
+
+	    // x
+	    // y
+	    // width
+	    // height
+	    // model
+	    // walkable
+	  }
+
 	  addMovers() {
 
+	    //manually add these
 	    var start = new Lane('1', 0, 600);
 	    var median = new Lane('1', 0, 300);
 	    var end = new Lane('1', 0, 0);
 
-	    var road1 = new Lane('-1', 1.3, 550);
-	    var road2 = new Lane('1', 2.3, 500);
-	    var road3 = new Lane('-1', 3.3, 450);
-	    var road4 = new Lane('1', 4.3, 400);
-	    var road5 = new Lane('-1', 5.3, 350);
+	    //for 1-5
 
-	    var agua1 = new Lane('1', 1, 250);
-	    var agua2 = new Lane('-1', 1, 200);
-	    var agua3 = new Lane('1', 1, 150);
-	    var agua4 = new Lane('-1', 1, 100);
-	    var agua5 = new Lane('1', 1, 50);
+	    // var road1, road2, road3, road4, road5;
+	    // for (let i = 1; i < 6; i++) {
+	    //   var newLane = this.laneFactory(i, 'road');
+	    //   eval("road" + i + " = newLane;")
+	    // }
 
-	    var truck1 = new Mover(100, road1.y, 100, 50, 'red', false);
-	    var truck2 = new Mover(250, road1.y, 100, 50, 'red', false);
-	    var truck3 = new Mover(-100, road2.y, 125, 50, 'blue', false);
-	    var truck4 = new Mover(-250, road2.y, 125, 50, 'blue', false);
-	    var truck5 = new Mover(150, road3.y, 150, 50, 'purple', false);
-	    var truck6 = new Mover(350, road3.y, 150, 50, 'purple', false);
-	    var truck7 = new Mover(-100, road4.y, 50, 50, 'grey', false);
-	    var truck8 = new Mover(-200, road4.y, 50, 50, 'grey', false);
-	    var truck9 = new Mover(100, road5.y, 200, 50, 'orange', false);
 
-	    var log1 = new Mover(-450, agua1.y, 650, 50, 'brown', true);
-	    var log2 = new Mover(-150, agua1.y, 350, 50, 'brown', true);
+	    // var road1 = new Lane('-1', 1.3, 550);
+	    // var road2 = new Lane('1', 2.3, 500);
+	    // var road3 = new Lane('-1', 3.3, 450);
+	    // var road4 = new Lane('1', 4.3, 400);
+	    // var road5 = new Lane('-1', 5.3, 350);
+
+	    //for 1-5
+	    var agua1 = new Lane('1', 0, 250);
+	    var agua2 = new Lane('-1', 1.4, 200);
+	    var agua3 = new Lane('1', 1.4, 150);
+	    var agua4 = new Lane('-1', 1.4, 100);
+	    var agua5 = new Lane('1', 1.4, 50);
+
+	    //generate till lane is full
+	    // var truck1 = new Mover(100, road1.y, 100, 50, 'red', false);
+	    // var truck2 = new Mover(250, road1.y, 100, 50, 'red', false);
+	    // var truck3 = new Mover(-100, road2.y, 125, 50, 'blue', false);
+	    // var truck4 = new Mover(-250, road2.y, 125, 50, 'blue', false);
+	    // var truck5 = new Mover(150, road3.y, 150, 50, 'purple', false);
+	    // var truck6 = new Mover(350, road3.y, 150, 50, 'purple', false);
+	    // var truck7 = new Mover(-100, road4.y, 50, 50, 'grey', false);
+	    // var truck8 = new Mover(-200, road4.y, 50, 50, 'grey', false);
+	    // var truck9 = new Mover(100, road5.y, 200, 50, 'orange', false);
+
+	    //generate till lane is full
+	    var log1a = new Mover(0, agua1.y, 100, 50, 'brown', true);
+	    var log1b = new Mover(150, agua1.y, 100, 50, 'brown', true);
+	    var log1c = new Mover(300, agua1.y, 100, 50, 'brown', true);
+	    var log1d = new Mover(450, agua1.y, 100, 50, 'brown', true);
+	    var log1e = new Mover(600, agua1.y, 100, 50, 'brown', true);
+	    var log1f = new Mover(750, agua1.y, 100, 50, 'brown', true);
+
 	    var log3 = new Mover(150, agua2.y, 625, 50, 'brown', true);
 	    var log4 = new Mover(300, agua2.y, 325, 50, 'brown', true);
 	    var log5 = new Mover(-100, agua3.y, 600, 50, 'brown', true);
@@ -670,23 +879,29 @@
 	    var log8 = new Mover(-300, agua4.y, 375, 50, 'brown', true);
 	    var log9 = new Mover(300, agua5.y, 600, 50, 'brown', true);
 
+	    //manually or auto with the padding concept
 	    var lilyPad1 = new Lilypad(125, end.y, 50, 50, 'pink', true, false);
 	    var lilyPad2 = new Lilypad(250, end.y, 50, 50, 'pink', true, false);
 	    var lilyPad3 = new Lilypad(375, end.y, 50, 50, 'pink', true, false);
 	    var lilyPad4 = new Lilypad(500, end.y, 50, 50, 'pink', true, false);
 	    var lilyPad5 = new Lilypad(625, end.y, 50, 50, 'pink', true, false);
 
-	    road1.pushOntoLane(truck1);
-	    road1.pushOntoLane(truck2);
-	    road2.pushOntoLane(truck3);
-	    road2.pushOntoLane(truck4);
-	    road3.pushOntoLane(truck5);
-	    road3.pushOntoLane(truck6);
-	    road4.pushOntoLane(truck7);
-	    road4.pushOntoLane(truck8);
-	    road5.pushOntoLane(truck9);
+	    // road1.pushOntoLane(truck1);
+	    // road1.pushOntoLane(truck2);
+	    // road2.pushOntoLane(truck3);
+	    // road2.pushOntoLane(truck4);
+	    // road3.pushOntoLane(truck5);
+	    // road3.pushOntoLane(truck6);
+	    // road4.pushOntoLane(truck7);
+	    // road4.pushOntoLane(truck8);
+	    // road5.pushOntoLane(truck9);
 
-	    agua1.pushOntoLane(log1);
+	    agua1.pushOntoLane(log1a);
+	    agua1.pushOntoLane(log1b);
+	    agua1.pushOntoLane(log1c);
+	    agua1.pushOntoLane(log1d);
+	    agua1.pushOntoLane(log1e);
+	    agua1.pushOntoLane(log1f);
 	    // agua1.pushOntoLane(log2);
 	    agua2.pushOntoLane(log3);
 	    // agua2.pushOntoLane(log4);
@@ -703,11 +918,16 @@
 	    // end.pushOntoLane(lilyPad5);
 
 	    this.lanes.push(start);
-	    this.lanes.push(road1);
-	    this.lanes.push(road2);
-	    this.lanes.push(road3);
-	    this.lanes.push(road4);
-	    this.lanes.push(road5);
+
+	    for (let i = 1; i < 6; i++) {
+	      this.laneFactory(i, 'road');
+	    }
+
+	    // this.lanes.push(road1);
+	    // this.lanes.push(road2);
+	    // this.lanes.push(road3);
+	    // this.lanes.push(road4);
+	    // this.lanes.push(road5);
 	    this.lanes.push(median);
 	    this.lanes.push(agua1);
 	    this.lanes.push(agua2);
@@ -794,6 +1014,23 @@
 	  resetPlayer(didPlayerDie) {
 	    if (didPlayerDie) {
 	      this.player.lives--;
+	    }
+	    if (this.player.lives <= 0) {
+	      //GAME OVER
+	      //TODO: move into function - actually make a function to display these popups - use parameters
+	      this.keepDrawing = false;
+	      this.justLost = true;
+	      this.context.fillStyle = 'white';
+	      this.context.fillRect(100, 100, 600, 450);
+
+	      this.context.fillStyle = 'black';
+	      this.context.font = "48px Acme";
+
+	      let message = `GAME OVER`;
+	      this.context.fillText(message, 150, 150);
+
+	      message = `Press SpaceBar to continue`;
+	      this.context.fillText(message, 150, 250);
 	    }
 	    this.player.x = 350;
 	    this.player.y = 600;
@@ -916,10 +1153,11 @@
 	
 
 	class Lane {
-	  constructor(direction, speed, y) {
+	  constructor(direction, speed, y, width) {
 	    this.direction = direction;
 	    this.speed = speed;
 	    this.y = y;
+	    this.width = width;
 	    this.moversInMyLane = [];
 	  }
 
