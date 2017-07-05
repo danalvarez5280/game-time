@@ -19,3 +19,7 @@
       visibility: hidden;
       height: 0px;
   }
+
+  #high-scores {
+    display: none;
+  }
