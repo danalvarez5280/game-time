@@ -12,6 +12,12 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
+      { test: /\.(png|jpeg|jpg|ttf|gif)$/, loader: 'url-loader' },
+      // { test: /\.(png|jpeg|jpg|ttf|gif)$/,
+      //   use: [
+      //     { loader: 'url-loader', options: {url: false} }
+      //   ]
+      // },
       { test: /\.css$/, loader: "style!css" }
     ]
   },
