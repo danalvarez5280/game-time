@@ -37,7 +37,18 @@ body {
   margin: 0 auto;
 }
 
-#high-scores {
-    display: none;
-  }
+.canvas-wrapper {
+  width: 800px;
+  height: 650px;
+  background-color: 'pink';
+  margin-left: 300px;
+}
 
+#user-name {
+    display: none;
+    position: absolute;
+    top: 450px;
+    left: 550px;
+    padding: 5px;
+    font-size: 20px;
+  }
