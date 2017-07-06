@@ -1,4 +1,58 @@
-# Game Time Starter Kit (FE - Module 2)
+# Game-Time [ Frogger ] by Dan Alvarez & Nick Svetnicka for Turing
+
+![ScreenShot of App](assets/_ss.png?raw=true "ScreenShot of App")
+
+## Introduction
+
+> This is an implementation of the game frogger using the HTML canvas. The game contains standard features such as safe zones, a road zone with cars/trucks, a water zone with landable logs, and finally a set of lilypads, as the objective. The game also keeps track of the top 5 scores, and increases difficulty on each new level.
+
+
+## Features
+
+* When the game starts, each lane is generated with a random speed and object type (car/truck).
+
+* When the frog is in a road lane, colliding with a car or truck reduces your lives by 1
+
+* When the frog is in the water, landing on a log will safely transport you up/down the river.
+
+* The level is complete once the place lands the frog on each of the lilypads.
+
+* Upon completing a level, the speed of the cars/trucks/logs will increase each level
+
+* Once your lives reaches 0, the game is over, and your score is saved if it within the top 5.
+
+* Edge detection exists to prevent the frog from moving off the canvas.
+
+* If the frog lands on a log, and the log reaches the canvas edge, the frog will slide with the log until he collides with the water.
+
+
+
+## Built With
+
+* HTML
+* CSS
+* JavaScript
+* Canvas
+* Chai
+* Mocha
+* Webpack
+
+## Team
+
+> Dan Alvarez
+
+> Nick Svetnicka
+
+
+
+
+
+
+
+# Installation instructions
+
+
+## Game Time Starter Kit (FE - Module 2)
 
 Basic Game Time starter kit.
 
