@@ -20,35 +20,55 @@ body {
   border: 2px solid #43646B;
   border-radius: 5px;
   display: block;
+  /*font-family: 'Acme';*/
+  font-family: 'Press Start 2P';
   margin: auto;
-  font-family: 'Acme'
   }
 
 #loadfont {
-    font-family: 'Acme';
-    visibility: hidden;
-    height: 0px;
+  /*font-family: 'Acme';*/
+  font-family: 'Press Start 2P';
+  height: 0px;
+  visibility: hidden;
 }
 
 .frog-header {
   background-image: url('../images/logo2.png');
+  margin: 0 350px;
   min-height: 148px;
   width: 800px;
-  margin: 0 auto;
+}
+
+.asides {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Press Start 2P';
+  font-size: 2em;
+  margin: 200px 20px;
+  position: absolute;
+}
+
+.display-info {
+  color: #592941;
+  margin-bottom: 25px;
 }
 
 .canvas-wrapper {
   width: 800px;
   height: 650px;
   background-color: 'pink';
-  margin-left: 300px;
+  margin-left: 400px;
 }
 
 #user-name {
-    display: none;
-    position: absolute;
-    top: 450px;
-    left: 550px;
+    /*display: none;*/
+    border: 2px solid #f0ff79;
+    color: #592941;
+    font-family: 'Acme';
+    font-size: 30px;
+    left: 630px;
     padding: 5px;
-    font-size: 20px;
+    position: absolute;
+    text-align: center;
+    top: 450px;
   }
