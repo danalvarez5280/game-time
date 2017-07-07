@@ -1,4 +1,4 @@
-# Game-Time [ Frogger ] by Dan Alvarez & Nick Svetnicka for Turing
+# Game-Time by Dan Alvarez & Nick Svetnicka for Turing
 
 ![ScreenShot of App](images/ss.png?raw=true "ScreenShot of App")
 
