@@ -157,7 +157,7 @@
 
 
 	// module
-	exports.push([module.id, "@font-face {\n  font-family: 'Acme';\n  font-style: normal;\n  font-weight: 400;\n  src: local('Acme Regular'), local('Acme-Regular'), url(https://fonts.gstatic.com/s/acme/v6/FDMh4aixPTtSeEPULD_zPPesZW2xOQ-xsNqO47m55DA.woff2) format('woff2');\n  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;\n}\n\n*, *::after, *::before {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  background-image: url(" + __webpack_require__(4) + ");\n}\n\n#frogger {\n  border: 2px solid #43646B;\n  border-radius: 5px;\n  display: block;\n  /*font-family: 'Acme';*/\n  font-family: 'Press Start 2P';\n  margin: auto;\n  }\n\n#loadfont {\n  /*font-family: 'Acme';*/\n  font-family: 'Press Start 2P';\n  height: 0px;\n  visibility: hidden;\n}\n\n.frog-header {\n  background-image: url(" + __webpack_require__(5) + ");\n  margin: 0 350px;\n  min-height: 148px;\n  width: 800px;\n}\n\n.asides {\n  display: flex;\n  flex-direction: column;\n  font-family: 'Press Start 2P';\n  font-size: 2em;\n  margin: 200px 20px;\n  position: absolute;\n}\n\n.display-info {\n  color: #592941;\n  margin-bottom: 25px;\n}\n\n.canvas-wrapper {\n  width: 800px;\n  height: 650px;\n  background-color: 'pink';\n  margin-left: 400px;\n}\n\n#user-name {\n    /*display: none;*/\n    border: 2px solid #f0ff79;\n    color: #592941;\n    font-family: 'Acme';\n    font-size: 30px;\n    left: 630px;\n    padding: 5px;\n    position: absolute;\n    text-align: center;\n    top: 450px;\n  }\n", ""]);
+	exports.push([module.id, "@font-face {\n  font-family: 'Acme';\n  font-style: normal;\n  font-weight: 400;\n  src: local('Acme Regular'), local('Acme-Regular'), url(https://fonts.gstatic.com/s/acme/v6/FDMh4aixPTtSeEPULD_zPPesZW2xOQ-xsNqO47m55DA.woff2) format('woff2');\n  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;\n}\n\n*, *::after, *::before {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  background-image: url(" + __webpack_require__(4) + ");\n}\n\n#frogger {\n  border: 2px solid #43646B;\n  border-radius: 5px;\n  display: block;\n  /*font-family: 'Acme';*/\n  font-family: 'Press Start 2P';\n  margin: auto;\n  }\n\n#loadfont {\n  /*font-family: 'Acme';*/\n  font-family: 'Press Start 2P';\n  height: 0px;\n  visibility: hidden;\n}\n\n.frog-header {\n  background-image: url(" + __webpack_require__(5) + ");\n  margin: 0 350px;\n  min-height: 148px;\n  width: 800px;\n}\n\n.asides {\n  display: flex;\n  flex-direction: column;\n  font-family: 'Press Start 2P';\n  font-size: 2em;\n  margin: 200px 20px;\n  position: absolute;\n}\n\n.display-info {\n  color: #592941;\n  margin-bottom: 25px;\n}\n\n.canvas-wrapper {\n  background-color: 'pink';\n  height: 650px;\n  margin-left: 400px;\n  width: 800px;\n}\n\n#user-name {\n    /*display: none;*/\n    border: 2px solid #f0ff79;\n    color: #592941;\n    font-family: 'Acme';\n    font-size: 30px;\n    left: 630px;\n    padding: 5px;\n    position: absolute;\n    text-align: center;\n    top: 450px;\n  }\n", ""]);
 
 	// exports
 
@@ -486,7 +486,7 @@
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {
+	
 	var Platform = __webpack_require__(8);
 	var Player = __webpack_require__(10);
 	var Mover = __webpack_require__(11);
@@ -497,8 +497,8 @@
 
 	// uncomment this for testing node
 
-	var Canvas = __webpack_require__(16);
-	global.Image = Canvas.Image;
+	// var Canvas = require('canvas');
+	// global.Image = Canvas.Image;
 
 	//First, I had to run: brew install pkg-config cairo libpng jpeg giflib
 	//Then run: npm install canvas
@@ -586,13 +586,33 @@
 
 	    this.context.fillStyle = '#f0ff79';
 	    this.context.font = "48px Acme";
+
 	    let message = `You passed level ${this.currentLevel}!`;
+
 	    this.context.fillText(message, 215, 275);
 
 	    message = `Press SpaceBar`;
 	    this.context.fillText(message, 240, 350);
 	    message = `To Start Level ${this.currentLevel + 1}`;
 	    this.context.fillText(message, 240, 400);
+	  }
+
+	  showYouDiedScreen() {
+	    this.keepDrawing = false;
+	    this.context.fillStyle = '#006E90';
+	    this.context.fillRect(100, 100, 600, 450);
+
+	    this.context.fillStyle = '#f0ff79';
+	    this.context.font = "48px Acme";
+
+	    let message = `YOU DIED!!`;
+	    this.context.fillText(message, 270, 250);
+
+	    message = `You only have ${this.player.lives} lives left`;
+	    this.context.fillText(message, 175, 325);
+
+	    message = `Press Spacebar to Continue`;
+	    this.context.fillText(message, 150, 400);
 	  }
 
 	  zoneCheck() {
@@ -667,7 +687,6 @@
 
 	  changeLevel() {
 	    this.keepDrawing = false;
-	    // let levelPassed = this.currentLevel;
 	    this.showNextLevelScreen();
 	    this.currentLevel++;
 	  }
@@ -679,6 +698,7 @@
 
 	    for (let i = 0; i < lastLaneMovers.length; i++) {
 	      let mover = lastLaneMovers[i];
+
 	      if (mover.occupied === false) {
 	        didIWin = false;
 	      }
@@ -700,23 +720,29 @@
 
 	  addPlatforms() {
 	    var startZone = new Platform(0, 600, this.canvas.width, 50, 'grass.png');
+
 	    this.platforms.push(startZone);
 
 	    var road = new Platform(0, 350, this.canvas.width, 250, 'road.png');
+
 	    this.platforms.push(road);
 
 	    var median = new Platform(0, 300, this.canvas.width, 50, 'grass.png');
+
 	    this.platforms.push(median);
 
 	    var water = new Platform(0, 50, this.canvas.width, 250, 'water.png');
+
 	    this.platforms.push(water);
 
 	    var endZone = new Platform(0, 0, this.canvas.width, 50, 'bush.png');
+
 	    this.platforms.push(endZone);
 	  }
 
 	  addPlayers() {
 	    var playerImage = new Image();
+
 	    playerImage.src = '../images/frog-spriteB.png';
 	    this.player = new Player(350, 600, 50, 50, 'frog.png', 3, playerImage);
 	  }
@@ -733,11 +759,11 @@
 	    var lilyPad4 = new Lilypad(500, end.y, 50, 50, 'lilypad.png', false);
 	    var lilyPad5 = new Lilypad(625, end.y, 50, 50, 'lilypad.png', false);
 
-	    // end.pushOntoLane(lilyPad1);
-	    // end.pushOntoLane(lilyPad2);
+	    end.pushOntoLane(lilyPad1);
+	    end.pushOntoLane(lilyPad2);
 	    end.pushOntoLane(lilyPad3);
-	    // end.pushOntoLane(lilyPad4);
-	    // end.pushOntoLane(lilyPad5);
+	    end.pushOntoLane(lilyPad4);
+	    end.pushOntoLane(lilyPad5);
 
 	    this.lanes.push(start);
 
@@ -801,6 +827,7 @@
 
 	    if (didPlayerDie) {
 	      this.player.lives--;
+	      this.showYouDiedScreen();
 	    }
 	    if (this.player.lives <= 0) {
 	      //GAME OVER
@@ -825,7 +852,6 @@
 	}
 
 	module.exports = Game;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
 /* 8 */
@@ -840,12 +866,14 @@
 
 	  draw(context) {
 	    let img = new Image();
+
 	    img.src = `../images/${this.model}`;
 	    let pattern = context.createPattern(img, 'repeat');
+
 	    context.fillStyle = pattern;
 	    context.fillRect(this.x, this.y, this.width, this.height);
 	  }
-	};
+	}
 
 	module.exports = Platform;
 
@@ -967,12 +995,14 @@
 
 	function roundNumber(value, precision) {
 	  var multiplier = Math.pow(10, precision || 0);
+
 	  return Math.round(value * multiplier) / multiplier;
 	}
 
 	function randomNumber(min, max, precision) {
 	  //min max are inclusive
 	  var newNum = Math.random() * (max - min) + min;
+
 	  newNum = roundNumber(newNum, precision);
 	  return newNum;
 	}
@@ -1124,12 +1154,6 @@
 	}
 
 	module.exports = { tickCalc, randomWidth, laneFactory, moverFactory, determineModel, pushToLocalStorage };
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports) {
-
-	module.exports = Canvas;
 
 /***/ })
 /******/ ]);
