@@ -1,5 +1,9 @@
 const path = require('path');
 
+//see https://www.npmjs.com/package/webpack-node-externals
+//var nodeExternals = require('webpack-node-externals');
+
+
 module.exports = {
   entry: {
     main: "./lib/index.js",
@@ -8,6 +12,9 @@ module.exports = {
   output: {
     path: __dirname,
     filename: "[name].bundle.js"
+  },
+  externals: {
+    "canvas": "Canvas"
   },
   module: {
     loaders: [
