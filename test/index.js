@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const Game = require('../lib/Game.js');
+const Game = require('../lib/game.js');
 // const Index = require('../lib/Index.js');
 
 // describe('Index', () => {
@@ -22,14 +22,23 @@ describe('Game', () => {
   })
 
 
-  it.skip('should exist', () => {
+  it('should exist', () => {
     //expect(true)
     expect(newGame).to.exist
   })
 
-  it.skip('should take a question and answer argument', () => {
-    expect(card.question).to.equal('What is the capital of Alaska?')
-    expect(card.answer).to.equal('Juneau')
+  it('the game should start on level 1', () => {
+    expect(newGame.currentLevel).to.equal(1)
   })
+
+  it('user name should be "Fred"', () => {
+    expect(newGame.nameInput).to.equal("Fred")
+  })
+
+  it('should have a function that will add a player', () =>{
+    expect(newGame.addPlayers).to.exist
+    // expect(newGame.player).to.exist
+  })
+  // expect(card.answer).to.equal('Juneau')
 
 });

@@ -55,11 +55,15 @@
 	const livesLabel = document.getElementById('lives');
 	const levelLabel = document.getElementById('level');
 	const scoreLabel = document.getElementById('score');
+	const nameInput = document.getElementById('user-name');
 
 	var frogger;
 
 	function initialize() {
-	  frogger = new Game(canvas, context);
+	  frogger = new Game(canvas, context, nameInput);
+
+	  frogger.nameInput.style.display = "block";
+	  frogger.nameInput.value = frogger.nameInput.value || '';
 
 	  frogger.addPlatforms();
 	  frogger.addPlayers();
@@ -70,17 +74,20 @@
 	  levelLabel.innerText = `Level: ${frogger.currentLevel}`;
 	  scoreLabel.innerText = `Score: ${frogger.currentScore}`;
 
-	  frogger.context.fillStyle = 'white';
+	  frogger.context.fillStyle = '#006E90';
 	  frogger.context.fillRect(100, 100, 600, 450);
 
-	  frogger.context.fillStyle = 'black';
+	  frogger.context.fillStyle = '#f0ff79';
 	  frogger.context.font = "48px Acme";
 
 	  let message = `Welcome to Frogger`;
-	  frogger.context.fillText(message, 150, 150);
+	  frogger.context.fillText(message, 195, 175);
 
-	  message = `Press SpaceBar to Start`;
-	  frogger.context.fillText(message, 150, 250);
+	  message = `Enter Your Name`;
+	  frogger.context.fillText(message, 225, 275);
+
+	  message = `Press SpaceBar To Start`;
+	  frogger.context.fillText(message, 175, 400);
 	  //gameLoop();
 	}
 
@@ -116,7 +123,9 @@
 	    if (frogger.justLost === true) {
 	      frogger.justLost = false;
 	      initialize();
+	      // frogger.nameInput.style.display = "block";
 	    } else {
+	      frogger.nameInput.style.display = "none";
 	      frogger.keepDrawing = true;
 	      gameLoop();
 	    }
@@ -148,6 +157,8 @@
 	});
 
 	initialize();
+
+	module.exports = initialize;
 
 	//
 
@@ -186,7 +197,7 @@
 
 
 	// module
-	exports.push([module.id, "@font-face {\n  font-family: 'Acme';\n  font-style: normal;\n  font-weight: 400;\n  src: local('Acme Regular'), local('Acme-Regular'), url(https://fonts.gstatic.com/s/acme/v6/FDMh4aixPTtSeEPULD_zPPesZW2xOQ-xsNqO47m55DA.woff2) format('woff2');\n  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;\n}\n\n*, *::after, *::before {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  background-image: url(" + __webpack_require__(4) + ");\n}\n\n#frogger {\n  border: 2px solid #43646B;\n  border-radius: 5px;\n  display: block;\n  margin: auto;\n  font-family: 'Acme'\n  }\n\n#loadfont {\n    font-family: 'Acme';\n    visibility: hidden;\n    height: 0px;\n}\n\n.frog-header {\n  background-image: url(" + __webpack_require__(5) + ");\n  min-height: 148px;\n  width: 800px;\n  margin: 0 auto;\n}\n\n#high-scores {\n    display: none;\n  }\n\n", ""]);
+	exports.push([module.id, "@font-face {\n  font-family: 'Acme';\n  font-style: normal;\n  font-weight: 400;\n  src: local('Acme Regular'), local('Acme-Regular'), url(https://fonts.gstatic.com/s/acme/v6/FDMh4aixPTtSeEPULD_zPPesZW2xOQ-xsNqO47m55DA.woff2) format('woff2');\n  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;\n}\n\n*, *::after, *::before {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  background-image: url(" + __webpack_require__(4) + ");\n}\n\n#frogger {\n  border: 2px solid #43646B;\n  border-radius: 5px;\n  display: block;\n  /*font-family: 'Acme';*/\n  font-family: 'Press Start 2P';\n  margin: auto;\n  }\n\n#loadfont {\n  /*font-family: 'Acme';*/\n  font-family: 'Press Start 2P';\n  height: 0px;\n  visibility: hidden;\n}\n\n.frog-header {\n  background-image: url(" + __webpack_require__(5) + ");\n  margin: 0 350px;\n  min-height: 148px;\n  width: 800px;\n}\n\n.asides {\n  display: flex;\n  flex-direction: column;\n  font-family: 'Press Start 2P';\n  font-size: 2em;\n  margin: 200px 20px;\n  position: absolute;\n}\n\n.display-info {\n  color: #592941;\n  margin-bottom: 25px;\n}\n\n.canvas-wrapper {\n  width: 800px;\n  height: 650px;\n  background-color: 'pink';\n  margin-left: 400px;\n}\n\n#user-name {\n    /*display: none;*/\n    border: 2px solid #f0ff79;\n    color: #592941;\n    font-family: 'Acme';\n    font-size: 30px;\n    left: 630px;\n    padding: 5px;\n    position: absolute;\n    text-align: center;\n    top: 450px;\n  }\n", ""]);
 
 	// exports
 
@@ -526,7 +537,7 @@
 
 
 	class Game {
-	  constructor(canvas, context) {
+	  constructor(canvas, context, nameInput) {
 	    this.canvas = canvas;
 	    this.context = context;
 	    this.platforms = [];
@@ -536,7 +547,7 @@
 	    this.currentScore = 0;
 	    this.keepDrawing = false;
 	    this.justLost = false;
-	    this.scoreTracker = 0;
+	    this.nameInput = nameInput;
 	  }
 
 	  clearCanvas() {
@@ -584,12 +595,12 @@
 	          mover.model = frog.model;
 	          mover.occupied = true;
 	          this.currentScore = this.currentScore + 20 * this.currentLevel * this.currentLevel;
-	          console.log(this.currentScore);
+	          // console.log(this.currentScore)
 
 	          this.resetPlayer(false);
 	        } else {
 	          //frog landed, but on a log
-	          console.log('on log dir: ', lane.direction, ' | speed: ', lane.speed);
+	          // console.log('on log dir: ', lane.direction, ' | speed: ', lane.speed);
 	          frog.x += lane.direction * lane.speed;
 	        }
 	      }
@@ -620,16 +631,18 @@
 	    let levelPassed = this.currentLevel;
 	    this.currentLevel++;
 
-	    this.context.fillStyle = 'white';
+	    this.context.fillStyle = '#006E90';
 	    this.context.fillRect(100, 100, 600, 450);
 
-	    this.context.fillStyle = 'black';
+	    this.context.fillStyle = '#f0ff79';
 	    this.context.font = "48px Acme";
-	    let message = `You passed level ${levelPassed}`;
-	    this.context.fillText(message, 150, 150);
+	    let message = `You passed level ${levelPassed}!`;
+	    this.context.fillText(message, 215, 275);
 
-	    message = `Press SpaceBar to start level ${this.currentLevel}`;
-	    this.context.fillText(message, 150, 250);
+	    message = `Press SpaceBar`;
+	    this.context.fillText(message, 240, 350);
+	    message = `To Start Level ${this.currentLevel}`;
+	    this.context.fillText(message, 240, 400);
 	  }
 
 	  winCheck() {
@@ -651,7 +664,8 @@
 	      this.changeLevel();
 
 	      for (let i = 0; i < this.lanes.length; i++) {
-	        this.lanes[i].speed = this.lanes[i].speed * 2;
+	        //TODO: is this speed adjustment per level ok?
+	        this.lanes[i].speed = this.lanes[i].speed * eval('1.' + this.currentLevel.toString());
 	        // console.log(this.lanes[i].speed);
 	        //reset lilipads model
 	        //update current level label
@@ -748,10 +762,10 @@
 
 	  //TODO: Maybe refactor type into a property of Lane class.
 	  //      then in here when we do new lane, pass in type as param into constructor
-	  laneFactory(i, type) {
+	  laneFactory(i, type, minSpeed, maxSpeed) {
 
 	    var direction = i % 2 === 1 ? 1 : -1;
-	    var speed = helpers.randomNumber(0.5, 4.0, 1);
+	    var speed = helpers.randomNumber(minSpeed, maxSpeed, 1);
 	    var offset = type === 'road' ? 300 : 0;
 	    var y = offset + i * 50;
 	    var randomWidth = this.randomWidth(type);
@@ -923,15 +937,15 @@
 	    // agua5.pushOntoLane(log9);
 
 	    end.pushOntoLane(lilyPad1);
-	    end.pushOntoLane(lilyPad2);
-	    end.pushOntoLane(lilyPad3);
-	    // end.pushOntoLane(lilyPad4);
+	    // end.pushOntoLane(lilyPad2);
+	    // end.pushOntoLane(lilyPad3);
+	    end.pushOntoLane(lilyPad4);
 	    // end.pushOntoLane(lilyPad5);
 
 	    this.lanes.push(start);
 
 	    for (let i = 5; i > 0; i--) {
-	      this.laneFactory(i, 'road');
+	      this.laneFactory(i, 'road', 0.5, 3.0);
 	    }
 
 	    // this.lanes.push(road1);
@@ -942,7 +956,7 @@
 	    this.lanes.push(median);
 
 	    for (let i = 5; i > 0; i--) {
-	      this.laneFactory(i, 'agua');
+	      this.laneFactory(i, 'agua', 0.5, 3.0);
 	    }
 
 	    // this.lanes.push(agua1);
@@ -1038,44 +1052,55 @@
 	    }
 	    if (this.player.lives <= 0) {
 	      //GAME OVER
-	      this.scoreTracker++;
-	      let topScores = [JSON.parse(localStorage.getItem(`Score${this.scoreTracker}`))];
+
+
+	      //TODO: move this local storage logic into it's own function
+	      let topScores = JSON.parse(localStorage.getItem('HighScores')) || [];
+	      let scoreTotal = this.currentScore;
+	      let scoreName = this.nameInput.value || 'Default User';
+
+	      topScores.push({ scoreTotal, scoreName });
 
 	      var sortedScores = topScores.sort(function (a, b) {
-	        return b - a;
+	        return b.scoreTotal - a.scoreTotal;
 	      });
+	      //slice at position 5
+	      var topFive = sortedScores.slice(0, 5);
+	      let stringScore = JSON.stringify(topFive);
 
-	      let scoreTotal = this.currentScore;
+	      localStorage.setItem('HighScores', stringScore);
 
-	      topScores.push(scoreTotal);
-	      let stringScore = JSON.stringify(topScores);
-
-	      localStorage.setItem(`Score${this.scoreTracker}`, stringScore);
-
-	      console.log(localStorage);
+	      // console.log(localStorage);
 	      //TODO: move into function - actually make a function to display these popups - use parameters
 	      this.keepDrawing = false;
 	      this.justLost = true;
-	      this.context.fillStyle = 'white';
+	      this.context.fillStyle = '#006E90';
 	      this.context.fillRect(100, 100, 600, 450);
 
-	      this.context.fillStyle = 'black';
-	      this.context.font = "48px Acme";
+	      this.context.fillStyle = '#f0ff79';
+	      this.context.font = "35px Acme";
 
 	      // this.pushScore();
 
 	      let message = `GAME OVER`;
 
-	      this.context.fillText(message, 150, 150);
+	      this.context.fillText(message, 310, 150);
 
-	      message = `Your Score was ${this.currentScore}`;
-	      this.context.fillText(message, 150, 250);
+	      message = `Your Score Was:  ${scoreTotal}`;
+	      this.context.fillText(message, 285, 200);
 
-	      message = `High Scores are ${sortedScores}`;
-	      this.context.fillText(message, 150, 350);
+	      message = `High Scores:`;
+	      this.context.fillText(message, 315, 250);
 
-	      message = `Press SpaceBar to continue`;
-	      this.context.fillText(message, 150, 450);
+	      for (var i = 0; i < topFive.length; i++) {
+	        this.context.font = "30px Acme";
+	        message = `${i + 1}: ${topFive[i].scoreName} - ${topFive[i].scoreTotal}`;
+	        this.context.fillText(message, 320, 300 + i * 30);
+	      }
+
+	      this.context.font = "30px Acme";
+	      message = `Press SpaceBar To Continue`;
+	      this.context.fillText(message, 250, 500);
 	    }
 	    this.player.x = 350;
 	    this.player.y = 600;
@@ -1221,7 +1246,7 @@
 
 	class Lane {
 	  constructor(direction, speed, y, width) {
-	    console.log('new lane with direction:', direction, ' | y:', y, '| speed:', speed);
+	    //console.log('new lane with direction:', direction, ' | y:', y, '| speed:', speed);
 	    this.direction = direction;
 	    this.speed = speed;
 	    this.y = y;

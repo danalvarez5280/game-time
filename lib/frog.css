@@ -54,10 +54,10 @@ body {
 }
 
 .canvas-wrapper {
-  width: 800px;
-  height: 650px;
   background-color: 'pink';
+  height: 650px;
   margin-left: 400px;
+  width: 800px;
 }
 
 #user-name {
