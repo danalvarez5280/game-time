@@ -1,6 +1,6 @@
 # Game-Time [ Frogger ] by Dan Alvarez & Nick Svetnicka for Turing
 
-![ScreenShot of App](assets/_ss.png?raw=true "ScreenShot of App")
+![ScreenShot of App](images/ss.png?raw=true "ScreenShot of App")
 
 ## Introduction
 
