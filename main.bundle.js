@@ -46,8 +46,8 @@
 
 	__webpack_require__(1);
 
-	var Game = __webpack_require__(7);
-	var Utilities = __webpack_require__(15);
+	const Game = __webpack_require__(7);
+	const Utilities = __webpack_require__(15);
 
 	const canvas = document.getElementById('frogger');
 	const context = canvas.getContext('2d');
@@ -57,7 +57,7 @@
 	const scoreLabel = document.getElementById('score');
 	const nameInput = document.getElementById('user-name');
 
-	var frogger;
+	let frogger;
 
 	function initialize() {
 	  frogger = new Game(canvas, context, nameInput);
@@ -487,13 +487,13 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	
-	var Platform = __webpack_require__(8);
-	var Player = __webpack_require__(10);
-	var Mover = __webpack_require__(11);
-	var Lane = __webpack_require__(12);
-	var Lilypad = __webpack_require__(13);
-	var helpers = __webpack_require__(14);
-	var Utilities = __webpack_require__(15);
+	const Platform = __webpack_require__(8);
+	const Player = __webpack_require__(10);
+	const Mover = __webpack_require__(11);
+	const Lane = __webpack_require__(12);
+	const Lilypad = __webpack_require__(13);
+	const helpers = __webpack_require__(14);
+	const Utilities = __webpack_require__(15);
 
 	// uncomment this for testing node
 
@@ -569,7 +569,7 @@
 	    message = `High Scores:`;
 	    this.context.fillText(message, 305, 250);
 
-	    for (var i = 0; i < topFive.length; i++) {
+	    for (let i = 0; i < topFive.length; i++) {
 	      this.context.font = "30px Acme";
 	      message = `${i + 1}: ${topFive[i].scoreName} - ${topFive[i].scoreTotal}`;
 	      this.context.fillText(message, 275, 300 + i * 30);
@@ -642,7 +642,7 @@
 	  }
 
 	  checkCollisionWater() {
-	    var didILand = false;
+	    let didILand = false;
 
 	    for (let j = 0; j < this.lanes[this.player.currentLane].moversInMyLane.length; j++) {
 	      let lane = this.lanes[this.player.currentLane];
@@ -692,13 +692,12 @@
 	  }
 
 	  winCheck() {
-	    var lastLaneIndex = this.lanes.length - 1;
-	    var lastLaneMovers = this.lanes[lastLaneIndex].moversInMyLane;
-	    var didIWin = true;
+	    let lastLaneIndex = this.lanes.length - 1;
+	    let lastLaneMovers = this.lanes[lastLaneIndex].moversInMyLane;
+	    let didIWin = true;
 
 	    for (let i = 0; i < lastLaneMovers.length; i++) {
 	      let mover = lastLaneMovers[i];
-
 	      if (mover.occupied === false) {
 	        didIWin = false;
 	      }
@@ -719,29 +718,29 @@
 	  }
 
 	  addPlatforms() {
-	    var startZone = new Platform(0, 600, this.canvas.width, 50, 'grass.png');
+	    let startZone = new Platform(0, 600, this.canvas.width, 50, 'grass.png');
 
 	    this.platforms.push(startZone);
 
-	    var road = new Platform(0, 350, this.canvas.width, 250, 'road.png');
+	    let road = new Platform(0, 350, this.canvas.width, 250, 'road.png');
 
 	    this.platforms.push(road);
 
-	    var median = new Platform(0, 300, this.canvas.width, 50, 'grass.png');
+	    let median = new Platform(0, 300, this.canvas.width, 50, 'grass.png');
 
 	    this.platforms.push(median);
 
-	    var water = new Platform(0, 50, this.canvas.width, 250, 'water.png');
+	    let water = new Platform(0, 50, this.canvas.width, 250, 'water.png');
 
 	    this.platforms.push(water);
 
-	    var endZone = new Platform(0, 0, this.canvas.width, 50, 'bush.png');
+	    let endZone = new Platform(0, 0, this.canvas.width, 50, 'bush.png');
 
 	    this.platforms.push(endZone);
 	  }
 
 	  addPlayers() {
-	    var playerImage = new Image();
+	    let playerImage = new Image();
 
 	    playerImage.src = '../images/frog-spriteB.png';
 	    this.player = new Player(350, 600, 50, 50, 'frog.png', 3, playerImage);
@@ -749,21 +748,21 @@
 
 	  addMovers() {
 
-	    var start = new Lane('1', 0, 600);
-	    var median = new Lane('1', 0, 300);
-	    var end = new Lane('1', 0, 0);
+	    let start = new Lane('1', 0, 600);
+	    let median = new Lane('1', 0, 300);
+	    let end = new Lane('1', 0, 0);
 
-	    var lilyPad1 = new Lilypad(125, end.y, 50, 50, 'lilypad.png', false);
-	    var lilyPad2 = new Lilypad(250, end.y, 50, 50, 'lilypad.png', false);
-	    var lilyPad3 = new Lilypad(375, end.y, 50, 50, 'lilypad.png', false);
-	    var lilyPad4 = new Lilypad(500, end.y, 50, 50, 'lilypad.png', false);
-	    var lilyPad5 = new Lilypad(625, end.y, 50, 50, 'lilypad.png', false);
+	    let lilyPad1 = new Lilypad(125, end.y, 50, 50, 'lilypad.png', false);
+	    let lilyPad2 = new Lilypad(250, end.y, 50, 50, 'lilypad.png', false);
+	    let lilyPad3 = new Lilypad(375, end.y, 50, 50, 'lilypad.png', false);
+	    let lilyPad4 = new Lilypad(500, end.y, 50, 50, 'lilypad.png', false);
+	    let lilyPad5 = new Lilypad(625, end.y, 50, 50, 'lilypad.png', false);
 
-	    end.pushOntoLane(lilyPad1);
+	    // end.pushOntoLane(lilyPad1);
 	    end.pushOntoLane(lilyPad2);
-	    end.pushOntoLane(lilyPad3);
+	    // end.pushOntoLane(lilyPad3);
 	    end.pushOntoLane(lilyPad4);
-	    end.pushOntoLane(lilyPad5);
+	    // end.pushOntoLane(lilyPad5);
 
 	    this.lanes.push(start);
 
@@ -857,7 +856,7 @@
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Doodad = __webpack_require__(9);
+	const Doodad = __webpack_require__(9);
 
 	class Platform extends Doodad {
 	  constructor(x, y, width, height, model) {
@@ -897,7 +896,7 @@
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Doodad = __webpack_require__(9);
+	const Doodad = __webpack_require__(9);
 
 	class Player extends Doodad {
 	  constructor(x, y, width, height, model, lives, image) {
@@ -932,7 +931,7 @@
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Platform = __webpack_require__(8);
+	const Platform = __webpack_require__(8);
 
 	class Mover extends Platform {
 
@@ -976,7 +975,7 @@
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Mover = __webpack_require__(11);
+	const Mover = __webpack_require__(11);
 
 	class Lilypad extends Mover {
 	  constructor(x, y, width, height, model, occupied) {
@@ -994,15 +993,13 @@
 	
 
 	function roundNumber(value, precision) {
-	  var multiplier = Math.pow(10, precision || 0);
-
+	  let multiplier = Math.pow(10, precision || 0);
 	  return Math.round(value * multiplier) / multiplier;
 	}
 
 	function randomNumber(min, max, precision) {
 	  //min max are inclusive
-	  var newNum = Math.random() * (max - min) + min;
-
+	  let newNum = Math.random() * (max - min) + min;
 	  newNum = roundNumber(newNum, precision);
 	  return newNum;
 	}
@@ -1014,9 +1011,9 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	
-	var helpers = __webpack_require__(14);
-	var Mover = __webpack_require__(11);
-	var Lane = __webpack_require__(12);
+	const helpers = __webpack_require__(14);
+	const Mover = __webpack_require__(11);
+	const Lane = __webpack_require__(12);
 
 	function tickCalc(game) {
 	  if (game.player.animateOn) {
@@ -1065,21 +1062,21 @@
 	}
 
 	function laneFactory(game, i, type, minSpeed, maxSpeed) {
-	  var direction = i % 2 === 1 ? 1 : -1;
-	  var speed = helpers.randomNumber(minSpeed, maxSpeed, 1);
-	  var offset = type === 'road' ? 300 : 0;
-	  var y = offset + i * 50;
-	  var newRandomWidth = randomWidth(type);
+	  let direction = i % 2 === 1 ? 1 : -1;
+	  let speed = helpers.randomNumber(minSpeed, maxSpeed, 1);
+	  let offset = type === 'road' ? 300 : 0;
+	  let y = offset + i * 50;
+	  let newRandomWidth = randomWidth(type);
 
-	  var newLane = new Lane(direction, speed, y, newRandomWidth);
+	  let newLane = new Lane(direction, speed, y, newRandomWidth);
 	  moverFactory(newLane, type);
 	  game.lanes.push(newLane);
 	}
 
 	function moverFactory(lane, type) {
-	  var y = lane.y;
-	  var width = lane.width;
-	  var height = 50;
+	  let y = lane.y;
+	  let width = lane.width;
+	  let height = 50;
 	  let gap = 0;
 	  let x = 0;
 	  let prevX = 0;
@@ -1101,7 +1098,7 @@
 	}
 
 	function determineModel(lane, type) {
-	  var model = 'error.png';
+	  let model = 'error.png';
 
 	  switch (lane.width) {
 	    case 100:
@@ -1141,11 +1138,11 @@
 
 	  topScores.push({ scoreTotal, scoreName });
 
-	  var sortedScores = topScores.sort(function (a, b) {
+	  let sortedScores = topScores.sort(function (a, b) {
 	    return b.scoreTotal - a.scoreTotal;
 	  });
 
-	  var topFive = sortedScores.slice(0, 5);
+	  let topFive = sortedScores.slice(0, 5);
 	  let stringScore = JSON.stringify(topFive);
 
 	  localStorage.setItem('HighScores', stringScore);
